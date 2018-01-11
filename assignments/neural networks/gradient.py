@@ -23,8 +23,8 @@ last_loss = None
 weights = np.random.normal(scale=1 / n_features**.5, size=n_features)
 
 # Neural Network hyperparameters
-epochs = 1000
-learnrate = 0.5
+epochs = 200
+learnrate = 0.9
 
 for e in range(epochs):
     del_w = np.zeros(weights.shape)
