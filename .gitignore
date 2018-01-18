@@ -16,4 +16,5 @@ face_generation/data/
 
 z_colleagues
 _localonly
-.idea
+.idea/
+*/.idea/*
