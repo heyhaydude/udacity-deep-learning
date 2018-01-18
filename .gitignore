@@ -18,3 +18,4 @@ z_colleagues
 _localonly
 .idea/
 */.idea/*
+*.hdf5
