@@ -22,3 +22,4 @@ _localonly
 *.jpg
 *.npz
 *.png
+*.npy

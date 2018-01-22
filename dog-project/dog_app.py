@@ -1,4 +1,6 @@
 
+face_detection_enable = False
+
 # coding: utf-8
 
 # # Artificial Intelligence Nanodegree
@@ -116,34 +118,36 @@ print('There are %d total human images.' % len(human_files))
 
 
 import cv2                
-import matplotlib.pyplot as plt                        
-get_ipython().magic('matplotlib inline')
+import matplotlib.pyplot as plt
+#get_ipython().magic('matplotlib inline')
 
-# extract pre-trained face detector
-face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt.xml')
+if face_detection_enable:
 
-# load color (BGR) image
-img = cv2.imread(human_files[3])
-# convert BGR image to grayscale
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    # extract pre-trained face detector
+    face_cascade = cv2.CascadeClassifier('haarcascades/haarcascade_frontalface_alt.xml')
 
-# find faces in image
-faces = face_cascade.detectMultiScale(gray)
+    # load color (BGR) image
+    img = cv2.imread(human_files[3])
+    # convert BGR image to grayscale
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-# print number of faces detected in the image
-print('Number of faces detected:', len(faces))
+    # find faces in image
+    faces = face_cascade.detectMultiScale(gray)
 
-# get bounding box for each detected face
-for (x,y,w,h) in faces:
-    # add bounding box to color image
-    cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-    
-# convert BGR image to RGB for plotting
-cv_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    # print number of faces detected in the image
+    print('Number of faces detected:', len(faces))
 
-# display the image, along with bounding box
-plt.imshow(cv_rgb)
-plt.show()
+    # get bounding box for each detected face
+    for (x,y,w,h) in faces:
+        # add bounding box to color image
+        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+
+    # convert BGR image to RGB for plotting
+    cv_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # display the image, along with bounding box
+    plt.imshow(cv_rgb)
+    plt.show()
 
 
 # Before using any of the face detectors, it is standard procedure to convert the images to grayscale.  The `detectMultiScale` function executes the classifier stored in `face_cascade` and takes the grayscale image as a parameter.  
@@ -182,19 +186,21 @@ def face_detector(img_path):
 
 human_files_short = human_files[:100]
 dog_files_short = train_files[:100]
-# Do NOT modify the code above this line.
-counter = 0
 
-for i in range(0,len(human_files_short)):
-    if face_detector(human_files_short[i]):
-        counter += 1
-print('Number of human faces detected in human pics:', counter)
+if face_detection_enable:
+    # Do NOT modify the code above this line.
+    counter = 0
 
-counter = 0
-for i in range(0,len(dog_files_short)):
-    if face_detector(dog_files_short[i]):
-        counter += 1
-print('Number of human faces detected in dog pics:', counter)
+    for i in range(0,len(human_files_short)):
+        if face_detector(human_files_short[i]):
+            counter += 1
+    print('Number of human faces detected in human pics:', counter)
+
+    counter = 0
+    for i in range(0,len(dog_files_short)):
+        if face_detector(dog_files_short[i]):
+            counter += 1
+    print('Number of human faces detected in dog pics:', counter)
 
 ## TODO: Test the performance of the face_detector algorithm 
 ## on the images in human_files_short and dog_files_short.
@@ -203,13 +209,13 @@ print('Number of human faces detected in dog pics:', counter)
 # In[16]:
 
 
-get_ipython().run_cell_magic('time', '', "for i in range(0,len(human_files_short)):\n    if face_detector(human_files_short[i]):\n        counter += 1\nprint('Number of human faces detected in human pics:', counter)")
+#get_ipython().run_cell_magic('time', '', "for i in range(0,len(human_files_short)):\n    if face_detector(human_files_short[i]):\n        counter += 1\nprint('Number of human faces detected in human pics:', counter)")
 
 
 # In[17]:
 
 
-get_ipython().run_cell_magic('time', '', "counter = 0\nfor i in range(0,len(dog_files_short)):\n    if face_detector(dog_files_short[i]):\n        counter += 1\nprint('Number of human faces detected in dog pics:', counter)")
+#get_ipython().run_cell_magic('time', '', "counter = 0\nfor i in range(0,len(dog_files_short)):\n    if face_detector(dog_files_short[i]):\n        counter += 1\nprint('Number of human faces detected in dog pics:', counter)")
 
 
 # __Question 2:__ This algorithmic choice necessitates that we communicate to the user that we accept human images only when they provide a clear view of a face (otherwise, we risk having unneccessarily frustrated users!). In your opinion, is this a reasonable expectation to pose on the user? If not, can you think of a way to detect humans in images that does not necessitate an image with a clearly presented face?
@@ -375,9 +381,33 @@ from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True                 
 
 # pre-process the data for Keras
-train_tensors = paths_to_tensor(train_files).astype('float32')/255
-valid_tensors = paths_to_tensor(valid_files).astype('float32')/255
-test_tensors = paths_to_tensor(test_files).astype('float32')/255
+import os.path
+filePaths = {}
+filePaths['trainTensors'] = 'data/train_tensors.npy'
+filePaths['validTensors'] = 'data/valid_tensors.npy'
+filePaths['testTensors'] = 'data/test_tensors.npy'
+
+train_tensors = np.zeros(0, 'float32')
+valid_tensors = np.zeros(0, 'float32')
+test_tensors = np.zeros(0, 'float32')
+
+if os.path.exists(filePaths['trainTensors']):
+    train_tensors = np.load(filePaths['trainTensors'])
+else:
+    train_tensors = paths_to_tensor(train_files).astype('float32')/255
+    np.save(filePaths['trainTensors'],train_tensors)
+    
+if os.path.exists(filePaths['validTensors']):
+    valid_tensors = np.load(filePaths['validTensors'])
+else:
+    valid_tensors = paths_to_tensor(valid_files).astype('float32')/255
+    np.save(filePaths['validTensors'],valid_tensors)
+
+if os.path.exists(filePaths['testTensors']):
+    test_tensors = np.load(filePaths['testTensors'])
+else:
+    test_tensors = paths_to_tensor(test_files).astype('float32')/255
+    np.save(filePaths['testTensors'],test_tensors)
 
 
 # ### (IMPLEMENTATION) Model Architecture
