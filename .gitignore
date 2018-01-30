@@ -25,3 +25,5 @@ _localonly
 *.npy
 transfer-learning/codes
 transfer-learning/labels
+*.csv
+*.jpeg
