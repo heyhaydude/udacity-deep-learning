@@ -277,13 +277,13 @@ def build_lstm(lstm_size, num_layers, batch_size, keep_prob):
     '''
     ### Build the LSTM Cell
     # Use a basic LSTM cell
-    lstm = tf.contrib.rnn.BasicLSTMCell(lstm_size)
+    #lstm = tf.contrib.rnn.BasicLSTMCell(lstm_size)
     
     # Add dropout to the cell outputs
-    drop = tf.contrib.rnn.DropoutWrapper(lstm, output_keep_prob=keep_prob)
+    #drop = tf.contrib.rnn.DropoutWrapper(lstm, output_keep_prob=keep_prob)
     
     # Stack up multiple LSTM layers, for deep learning
-    cell = tf.contrib.rnn.MultiRNNCell([build_cell(num_layers, keep_prob) for _ in range(num_layers)])
+    cell = tf.contrib.rnn.MultiRNNCell([build_cell(lstm_size, keep_prob) for _ in range(num_layers)])
    
     initial_state = cell.zero_state(batch_size, tf.float32)
     
