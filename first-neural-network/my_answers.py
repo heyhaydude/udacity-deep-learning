@@ -108,8 +108,9 @@ class NeuralNetwork(object):
             n_records: number of records
 
         '''
-        self.weights_hidden_to_output += None # update hidden-to-output weights with gradient descent step
-        self.weights_input_to_hidden += None # update input-to-hidden weights with gradient descent step
+        self.weights_hidden_to_output += self.lr * delta_weights_h_o / n_records   
+        self.weights_input_to_hidden += self.lr * delta_weights_i_h / n_records
+
 
     def run(self, features):
         ''' Run a forward pass through the network with input features 
@@ -130,7 +131,7 @@ class NeuralNetwork(object):
 #########################################################
 # Set your hyperparameters here
 ##########################################################
-iterations = 100
-learning_rate = 0.1
-hidden_nodes = 2
+iterations = 3000
+learning_rate = 0.8
+hidden_nodes = 16
 output_nodes = 1
