@@ -31,3 +31,5 @@ save.data
 save.data-00000-of-00001
 save.meta
 *.gz
+*.mat
+*.zip
